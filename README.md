@@ -1,5 +1,7 @@
 # QA Take-Home Challenge
 
+[![E2E Tests](https://github.com/AlfredPolanco/QA-Take-Home-JS/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/AlfredPolanco/QA-Take-Home-JS/actions/workflows/e2e-tests.yml)
+
 QA planning, exploratory & functional testing, and a Playwright automation suite for two exercises:
 
 - **Exercise 1** — Exploratory & Functional Testing on [the-internet.herokuapp.com](https://the-internet.herokuapp.com/) (Form Authentication, Dynamic Loading, File Upload, Dropdown).
@@ -16,6 +18,7 @@ All bugs listed below were found by actually driving both live sites during this
 | Evidence (screenshots) | `docs/exercise-1-the-internet/evidence/`, `docs/exercise-2-saucedemo/evidence/` |
 | Automation suite | `automation/` (Playwright + TypeScript, POM) — zipped copy at `automation.zip` |
 | How to run the automation suite | `automation/DOCS.html` (open in a browser) |
+| CI/CD | `.github/workflows/e2e-tests.yml` — GitHub Actions, runs on every push/PR to `main` |
 | AI usage report | `docs/ai-usage-report.md` |
 
 ## Bugs found (16 total, all reproduced live)
@@ -37,10 +40,22 @@ npm test
 
 52 tests, exit code 0 (17 of them intentionally document the open bugs above via Playwright's `test.fail()` — see `automation/DOCS.html` §7 for why that's the right pattern for a suite you can trust in CI). Full instructions, project structure, and how to extend the suite: open `automation/DOCS.html` in a browser.
 
+## Continuous Integration
+
+`.github/workflows/e2e-tests.yml` runs the suite on every push and pull request to `main` (and on demand via `workflow_dispatch`):
+
+| Job | Runs | Playwright projects |
+|---|---|---|
+| `exercise-1` | `npm run test:ex1` | `the-internet-desktop` |
+| `exercise-2` | `npm run test:ex2` | `saucedemo-desktop`, `saucedemo-mobile` |
+
+Both jobs run in parallel on `ubuntu-latest`, install Chromium fresh each run (`npx playwright install --with-deps chromium`), and upload the HTML report (`automation/playwright-report/`) as a downloadable artifact whether the run passes or fails — so a red run can be debugged straight from the Actions tab without reproducing it locally first. See `automation/DOCS.html` §12 for the full breakdown and how to read a run.
+
 ## Tooling
 
 - **Framework:** Playwright Test + TypeScript, Page Object Model (`automation/pages/`).
 - **Formatting:** Prettier, enforced on every commit via Husky + lint-staged (`.husky/pre-commit` → `automation/` → `lint-staged` → `prettier --write` on staged files).
+- **CI/CD:** GitHub Actions (`.github/workflows/e2e-tests.yml`) — see [Continuous Integration](#continuous-integration) above.
 - **Self-healing locators:** `.claude/agents/healer.md` is a Claude Code subagent scoped to diagnosing and fixing broken Playwright locators against the live DOM when these public training sites change their markup — see `automation/DOCS.html` §10.
 
 ## AI usage

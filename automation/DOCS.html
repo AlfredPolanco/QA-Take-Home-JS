@@ -376,6 +376,7 @@
         <li><a href="#tooling">Formatting & pre-commit</a></li>
         <li><a href="#healer">The healer agent</a></li>
         <li><a href="#troubleshooting">Troubleshooting</a></li>
+        <li><a href="#ci">Continuous Integration</a></li>
       </ol>
     </nav>
 
@@ -754,6 +755,79 @@ npm run format:check   <span class="cmt"># CI-style check, no writes</span></cod
             the pattern in <a href="#bugs">§7</a>.
           </p>
         </div>
+      </section>
+
+      <section id="ci">
+        <h2><span class="num">12</span>Continuous Integration</h2>
+        <p>
+          <code>.github/workflows/e2e-tests.yml</code> runs this suite in GitHub Actions on every
+          push and pull request to <code>main</code>, and on demand via the Actions tab
+          (<code>workflow_dispatch</code>). It mirrors the two <code>npm</code> scripts from
+          <a href="#running">§04</a> as two independent jobs:
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Job</th>
+                <th>Command</th>
+                <th>Playwright project(s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>exercise-1</code></td>
+                <td><code>npm run test:ex1</code></td>
+                <td><code>the-internet-desktop</code></td>
+              </tr>
+              <tr>
+                <td><code>exercise-2</code></td>
+                <td><code>npm run test:ex2</code></td>
+                <td><code>saucedemo-desktop</code>, <code>saucedemo-mobile</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Both jobs run in parallel on <code>ubuntu-latest</code>: checkout → Node 20 (with npm
+          cache keyed on <code>automation/package-lock.json</code>) → <code>npm ci</code> →
+          <code>npx playwright install --with-deps chromium</code> → the test script. Each job
+          uploads <code>automation/playwright-report/</code> as a build artifact (<code
+            >if: always()</code
+          >, 14-day retention) whether it passes or fails, so a red run can be triaged straight from
+          the Actions tab — download the artifact and open <code>index.html</code> to see traces,
+          videos, and screenshots, no local reproduction needed first.
+        </p>
+        <div class="callout">
+          <p>
+            <strong>A green run is the expected result</strong>, not just "no failures." As covered
+            in <a href="#bugs">§7</a>, 17 of the 52 tests intentionally assert the
+            <em>correct</em> behavior for a known, open bug and are marked with
+            <code>test.fail()</code> — they show up in the job log with a red ✘ next to their name,
+            but count toward the pass total and don't fail the build. Only an actual
+            <strong>unexpected pass</strong> (one of those 17 starts succeeding) or a genuinely new
+            failure will turn a run red.
+          </p>
+        </div>
+        <p>Two concurrency safeguards keep the workflow well-behaved on a fast-moving branch:</p>
+        <pre><code>concurrency:
+  group: e2e-<span class="cmt">${{ github.workflow }}</span>-<span class="cmt">${{ github.ref }}</span>
+  cancel-in-progress: true</code></pre>
+        <p>
+          A new push to the same branch cancels any run already in progress for it, so CI minutes
+          aren't spent finishing a run that's already obsolete.
+        </p>
+        <h3>Running it locally the same way CI does</h3>
+        <pre><code><span class="cmt"># from automation/, same commands the workflow runs</span>
+npm ci
+npx playwright install --with-deps chromium
+npm run test:ex1
+npm run test:ex2</code></pre>
+        <p>
+          <code>playwright.config.ts</code> already detects <code>process.env.CI</code> and reduces
+          parallel workers accordingly, so behavior between a local run and the Actions run stays
+          consistent.
+        </p>
       </section>
 
       <footer>
