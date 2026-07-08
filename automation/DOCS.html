@@ -1,0 +1,766 @@
+<title>QA Automation Suite — Docs</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --ink: #1b1f1d;
+    --muted: #5c655f;
+    --line: #e3ded4;
+    --accent: #0f6b5c;
+    --accent-ink: #0a4a40;
+    --accent-soft: #e4f0ec;
+    --amber: #a15a17;
+    --amber-soft: #f7ecdd;
+    --code-bg: #16201d;
+    --code-ink: #d8e6df;
+    --code-accent: #7fd9be;
+    --mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+    --sans: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: var(--accent-ink);
+    text-decoration-color: rgba(15, 107, 92, 0.35);
+  }
+  a:hover {
+    text-decoration-color: currentColor;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px 96px;
+  }
+
+  header.hero {
+    padding: 56px 0 36px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 36px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  h1 {
+    font-size: clamp(30px, 4vw, 42px);
+    margin: 18px 0 10px;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .hero p.lede {
+    max-width: 62ch;
+    color: var(--muted);
+    font-size: 17px;
+    margin: 0 0 26px;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 760px;
+  }
+
+  .stat {
+    background: var(--surface);
+    padding: 14px 16px;
+  }
+
+  .stat .num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 22px;
+    color: var(--accent-ink);
+  }
+
+  .stat .label {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 28px;
+    font-size: 14px;
+  }
+
+  nav.toc .toc-title {
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    counter-reset: toc;
+  }
+
+  nav.toc a {
+    display: block;
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  nav.toc a:hover {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+
+  main {
+    min-width: 0;
+  }
+
+  section {
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  section:last-child {
+    border-bottom: none;
+  }
+
+  h2 {
+    font-size: 23px;
+    margin: 0 0 6px;
+    text-wrap: balance;
+    scroll-margin-top: 24px;
+  }
+
+  h2 .num {
+    font-family: var(--mono);
+    color: var(--muted);
+    font-weight: 400;
+    margin-right: 10px;
+  }
+
+  h3 {
+    font-size: 16.5px;
+    margin: 28px 0 10px;
+  }
+
+  section > p,
+  section > ul,
+  section > ol {
+    max-width: 72ch;
+  }
+
+  p {
+    margin: 12px 0;
+  }
+
+  code:not(pre code) {
+    font-family: var(--mono);
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 14px 0;
+  }
+
+  pre code {
+    font-family: var(--mono);
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+
+  pre .cmt {
+    color: #7f9089;
+  }
+  pre .kw {
+    color: var(--code-accent);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin: 14px 0;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 480px;
+    font-size: 14.5px;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  th {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  td code {
+    white-space: nowrap;
+  }
+
+  .tree {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.65;
+  }
+  .tree .dim {
+    color: #7f9089;
+  }
+
+  .callout {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    max-width: 72ch;
+    font-size: 14.5px;
+  }
+
+  .callout.amber {
+    border-left-color: var(--amber);
+    background: var(--amber-soft);
+  }
+
+  .callout p {
+    margin: 4px 0;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    margin-left: 6px;
+  }
+
+  footer {
+    padding-top: 40px;
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+
+  @media (max-width: 860px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    nav.toc {
+      position: static;
+      margin-bottom: 8px;
+    }
+    nav.toc ol {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<div class="shell">
+  <header class="hero">
+    <span class="eyebrow">Automation Suite Docs</span>
+    <h1>QA Automation Suite</h1>
+    <p class="lede">
+      Playwright + TypeScript, Page Object Model, covering
+      <code>the-internet.herokuapp.com</code> (Exercise 1) and <code>saucedemo.com</code> (Exercise
+      2). This page is everything you need to install, run, read, and extend the suite.
+    </p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="num">52</div>
+        <div class="label">automated tests</div>
+      </div>
+      <div class="stat">
+        <div class="num">2</div>
+        <div class="label">target sites</div>
+      </div>
+      <div class="stat">
+        <div class="num">3</div>
+        <div class="label">Playwright projects</div>
+      </div>
+      <div class="stat">
+        <div class="num">17</div>
+        <div class="label">known-bug tests</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">On this page</div>
+      <ol>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#requirements">Requirements</a></li>
+        <li><a href="#install">Installation</a></li>
+        <li><a href="#running">Running the tests</a></li>
+        <li><a href="#structure">Project structure</a></li>
+        <li><a href="#suites">Suites at a glance</a></li>
+        <li><a href="#bugs">How known bugs are handled</a></li>
+        <li><a href="#writing">Writing a new test</a></li>
+        <li><a href="#tooling">Formatting & pre-commit</a></li>
+        <li><a href="#healer">The healer agent</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+      </ol>
+    </nav>
+
+    <main>
+      <section id="overview">
+        <h2><span class="num">01</span>Overview</h2>
+        <p>
+          This suite exists to give both take-home exercises a real, repeatable regression check —
+          not just a one-time manual pass. It uses
+          <a href="https://playwright.dev" target="_blank" rel="noopener">Playwright Test</a>
+          with TypeScript and the Page Object Model (POM), so locators and page interactions live in
+          one place (<code>pages/</code>) and the test files (<code>tests/</code>) read like a QA
+          test case: arrange, act, assert.
+        </p>
+        <p>
+          It runs entirely against the two live public sites — no mocking, no fixtures standing in
+          for the real app — because the goal is to catch real behavior, including the bugs
+          documented in
+          <code>docs/exercise-1-the-internet/bug-board.md</code> and
+          <code>docs/exercise-2-saucedemo/bug-board.md</code>.
+        </p>
+      </section>
+
+      <section id="requirements">
+        <h2><span class="num">02</span>Requirements</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Version</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Node.js</td>
+                <td>18 or newer</td>
+                <td>Tested on 20.x</td>
+              </tr>
+              <tr>
+                <td>npm</td>
+                <td>9 or newer</td>
+                <td>Ships with Node</td>
+              </tr>
+              <tr>
+                <td>Browser binary</td>
+                <td>Chromium</td>
+                <td>Installed automatically in step 3 below — no separate download needed</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Only Chromium is required. The mobile-viewport tests use Chromium's built-in device
+          emulation (a 375×667 viewport with touch enabled) rather than Playwright's WebKit-based
+          <code>devices['iPhone SE']</code> profile — same responsive CSS behavior, one fewer ~150MB
+          browser binary to install on a fresh machine.
+        </p>
+      </section>
+
+      <section id="install">
+        <h2><span class="num">03</span>Installation</h2>
+        <ol>
+          <li>
+            <strong>Unzip the project and move into it.</strong>
+            <pre><code><span class="cmt"># if you received automation.zip</span>
+unzip automation.zip
+cd automation</code></pre>
+          </li>
+          <li>
+            <strong>Install dependencies.</strong>
+            <pre><code>npm install</code></pre>
+          </li>
+          <li>
+            <strong>Install the Chromium browser Playwright drives.</strong>
+            <pre><code>npx playwright install chromium</code></pre>
+          </li>
+        </ol>
+        <div class="callout">
+          <p>
+            <strong>That's it.</strong> No environment variables, no test accounts to provision, no
+            local server to start — both target sites are public and already live.
+          </p>
+        </div>
+      </section>
+
+      <section id="running">
+        <h2><span class="num">04</span>Running the tests</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>What it does</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>npm test</code></td>
+                <td>Runs the full suite (both exercises, all 3 projects)</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:ex1</code></td>
+                <td>Exercise 1 only (the-internet.herokuapp.com)</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:ex2</code></td>
+                <td>Exercise 2 only (saucedemo.com, desktop + mobile)</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:headed</code></td>
+                <td>Same as <code>npm test</code> but with a visible browser window</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:debug</code></td>
+                <td>Opens the Playwright Inspector for step-through debugging</td>
+              </tr>
+              <tr>
+                <td><code>npm run report</code></td>
+                <td>Opens the last HTML report (traces, videos, screenshots on failure)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>You can also target a single file or test by name, same as any Playwright project:</p>
+        <pre><code>npx playwright test tests/saucedemo/checkout.spec.ts
+npx playwright test -g <span class="cmt">"valid credentials"</span></code></pre>
+        <div class="callout">
+          <p>
+            <strong>Expect exit code 0.</strong> All 52 tests report as passed, including the 17
+            that document currently-open bugs — see <a href="#bugs">§7</a> for why that's
+            intentional.
+          </p>
+        </div>
+      </section>
+
+      <section id="structure">
+        <h2><span class="num">05</span>Project structure</h2>
+        <div class="tree">
+          automation/ ├── playwright.config.ts
+          <span class="dim"
+            ># 3 projects: the-internet-desktop, saucedemo-desktop, saucedemo-mobile</span
+          >
+          ├── config/urls.ts <span class="dim"># base URLs for both target sites</span> ├──
+          fixtures/ │ ├── test-data.ts <span class="dim"># credentials, checkout info</span> │ └──
+          files/ <span class="dim"># sample file used by the File Upload tests</span> ├── pages/
+          <span class="dim"># Page Object Model — one class per screen</span> │ ├── base/BasePage.ts
+          │ ├── the-internet/
+          <span class="dim"># LoginPage, DynamicLoadingPage, FileUploadPage, DropdownPage</span> │
+          └── saucedemo/
+          <span class="dim"># LoginPage, InventoryPage, CartPage, CheckoutPage</span> ├── tests/ │
+          ├── the-internet/
+          <span class="dim"
+            ># form-authentication, dynamic-loading, file-upload, dropdown, navigation</span
+          >
+          │ └── saucedemo/
+          <span class="dim"># login, inventory, cart, checkout, responsive, known-issues</span> └──
+          DOCS.html <span class="dim"># this file</span>
+        </div>
+        <h3>Why Page Object Model</h3>
+        <p>
+          Every locator for a screen lives in exactly one class. When the DOM changes, you fix it in
+          one file instead of hunting through every spec that touches that screen — and it's the
+          same reason the <a href="#healer">healer agent</a> can repair a broken selector safely: it
+          knows exactly where to look.
+        </p>
+      </section>
+
+      <section id="suites">
+        <h2><span class="num">06</span>Suites at a glance</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Spec file</th>
+                <th>Covers</th>
+                <th>Tests</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>the-internet/form-authentication.spec.ts</code></td>
+                <td>Valid/invalid login, logout, deep-link, back-button-after-logout</td>
+                <td>7</td>
+              </tr>
+              <tr>
+                <td><code>the-internet/file-upload.spec.ts</code></td>
+                <td>Successful upload, no-file submission, broken Dropzone widget</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td><code>the-internet/dynamic-loading.spec.ts</code></td>
+                <td>Example 1 &amp; 2</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td><code>the-internet/dropdown.spec.ts</code></td>
+                <td>Default state, both options</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td><code>the-internet/navigation.spec.ts</code></td>
+                <td>Cross-module navigation (parametrized × 5 pages)</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td><code>saucedemo/login.spec.ts</code></td>
+                <td>Valid, invalid, empty, locked-out</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><code>saucedemo/inventory.spec.ts</code></td>
+                <td>Product list, layout, all 4 sort options</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td><code>saucedemo/cart.spec.ts</code></td>
+                <td>Add/remove, badge, detail-page consistency</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td><code>saucedemo/checkout.spec.ts</code></td>
+                <td>Field validation, order math, completion</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td><code>saucedemo/responsive.spec.ts</code></td>
+                <td>375px viewport: overflow, menu, purchase flow, card spacing</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><code>saucedemo/known-issues.spec.ts</code></td>
+                <td>
+                  <code>problem_user</code>, <code>performance_glitch_user</code>,
+                  <code>visual_user</code>, <code>error_user</code>, cart/session bug
+                </td>
+                <td>8</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="bugs">
+        <h2><span class="num">07</span>How known bugs are handled</h2>
+        <p>
+          17 of the 52 tests document a real, reproduced bug from the bug boards rather than a
+          passing requirement. Each one asserts the <em>correct</em> expected behavior and is marked
+          with Playwright's <code>test.fail()</code>:
+        </p>
+        <pre><code>test(<span class="cmt">'TC-EX1-UPLOAD-02 [BUG-EX1-001] submitting without a file should show a validation message, not a server error'</span>, async ({ page }) => {
+  test.fail(true, <span class="cmt">'BUG-EX1-001: submitting the form with no file selected returns HTTP 500'</span>);
+  <span class="kw">const</span> upload = <span class="kw">new</span> FileUploadPage(page);
+  await upload.open();
+  <span class="kw">const</span> response = await upload.submitWithoutFile();
+
+  <span class="cmt">// Expected: a 4xx validation response (or an inline client-side error) - not a 5xx crash.</span>
+  expect(response.status()).toBeLessThan(500);
+});</code></pre>
+        <p>
+          This keeps <code>npm test</code> green (the correct semantics for "regression suite you
+          can trust in CI") while still surfacing every open bug in the HTML report — they show with
+          a red ✘ in the list output but count toward the pass total, tagged "expected to fail."
+        </p>
+        <div class="callout">
+          <p>
+            <strong>The useful part:</strong> if a bug gets fixed upstream, that test starts
+            <em>passing</em> — which Playwright reports as an <strong>unexpected pass</strong> and
+            fails the run. That failure is the signal to delete the <code>test.fail()</code> line
+            and close the bug card.
+          </p>
+        </div>
+      </section>
+
+      <section id="writing">
+        <h2><span class="num">08</span>Writing a new test</h2>
+        <p>
+          Add a method to the relevant Page Object if the interaction doesn't exist yet, then write
+          the spec against it:
+        </p>
+        <pre><code><span class="kw">import</span> { test, expect } <span class="kw">from</span> <span class="cmt">'@playwright/test'</span>;
+<span class="kw">import</span> { InventoryPage } <span class="kw">from</span> <span class="cmt">'../../pages/saucedemo/InventoryPage'</span>;
+
+test(<span class="cmt">'TC-EX2-INV-06 example: a new inventory assertion'</span>, async ({ page }) => {
+  <span class="kw">const</span> inventory = <span class="kw">new</span> InventoryPage(page);
+  <span class="cmt">// ...arrange, act, assert</span>
+});</code></pre>
+        <p>
+          Keep test IDs consistent with the scheme already in use
+          (<code>TC-EX&lt;exercise&gt;-&lt;AREA&gt;-&lt;n&gt;</code>) and add the corresponding row
+          to <code>docs/exercise-*/test-cases.md</code> so the spreadsheet and the code never drift
+          apart.
+        </p>
+      </section>
+
+      <section id="tooling">
+        <h2><span class="num">09</span>Formatting & pre-commit</h2>
+        <p>
+          Prettier formats the project (<code>.prettierrc.json</code>);
+          <a href="https://github.com/okonet/lint-staged" target="_blank" rel="noopener"
+            >lint-staged</a
+          >
+          runs it only on staged files, wired into a
+          <a href="https://typicode.github.io/husky/" target="_blank" rel="noopener">Husky</a>
+          <code>pre-commit</code> hook. It's automatic once <code>npm install</code> has run (the
+          <code>prepare</code> script installs the hook) — nothing else to configure.
+        </p>
+        <pre><code><span class="cmt"># runs automatically on `git commit`; to run it by hand:</span>
+npm run format         <span class="cmt"># rewrite files</span>
+npm run format:check   <span class="cmt"># CI-style check, no writes</span></code></pre>
+      </section>
+
+      <section id="healer">
+        <h2>
+          <span class="num">10</span>The healer agent
+          <span class="badge">Claude Code subagent</span>
+        </h2>
+        <p>
+          Public demo sites like these two change their markup occasionally without notice. Rather
+          than leaving broken locators for a human to triage, this repo ships a Claude Code subagent
+          at
+          <code>.claude/agents/healer.md</code> whose only job is fixing that specific failure mode.
+        </p>
+        <h3>What it does</h3>
+        <ol>
+          <li>
+            Reproduces the failing test and reads the Playwright trace/error to find the broken
+            locator.
+          </li>
+          <li>Inspects the live DOM at the point of failure to find the element's new shape.</li>
+          <li>
+            Proposes a robust replacement locator (role/text/testid, per Playwright's own locator
+            priority) and patches the one Page Object file responsible — never the spec files, never
+            unrelated pages.
+          </li>
+          <li>Re-runs just that test to confirm the fix, and reports a short diff.</li>
+        </ol>
+        <h3>When to reach for it</h3>
+        <p>
+          Run <code>npm test</code>. If a failure isn't one of the 17 documented bugs and looks like
+          a locator problem (a timeout waiting for a selector, not an assertion mismatch), invoke
+          the agent from Claude Code:
+        </p>
+        <pre><code><span class="cmt">› @healer the login test in automation/tests/saucedemo/login.spec.ts is failing, </span>
+<span class="cmt">  looks like a broken locator, can you take a look?</span></code></pre>
+        <p>
+          It intentionally will not touch test assertions or bug annotations — those are QA judgment
+          calls, not something to auto-resolve.
+        </p>
+      </section>
+
+      <section id="troubleshooting">
+        <h2><span class="num">11</span>Troubleshooting</h2>
+        <div class="callout amber">
+          <p>
+            <strong>"Executable doesn't exist" when running tests</strong><br />
+            Chromium isn't installed yet — run <code>npx playwright install chromium</code>.
+          </p>
+        </div>
+        <div class="callout amber">
+          <p>
+            <strong>A saucedemo test times out on <code>#login-button</code> or similar</strong
+            ><br />
+            The site occasionally rate-limits rapid repeated runs from the same IP. Wait a minute
+            and re-run, or run with <code>--workers=1</code> to reduce concurrent sessions.
+          </p>
+        </div>
+        <div class="callout amber">
+          <p>
+            <strong>A test fails that isn't one of the 17 documented bugs</strong><br />
+            Check <code>automation/playwright-report/index.html</code> (<code>npm run report</code>)
+            for the trace. If it's a changed selector, see <a href="#healer">§10</a>. If it's a new,
+            real behavior change on the target site, add it to the relevant
+            <code>bug-board.md</code> and wrap the assertion in <code>test.fail()</code> following
+            the pattern in <a href="#bugs">§7</a>.
+          </p>
+        </div>
+      </section>
+
+      <footer>
+        Part of the QA Take-Home Challenge submission — see the repository root
+        <code>README.md</code>
+        for the full set of deliverables (planning sheets, test cases, bug boards, AI usage report).
+      </footer>
+    </main>
+  </div>
+</div>

@@ -141,3 +141,19 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Playwright
+automation/playwright-report/
+automation/test-results/
+automation/blob-report/
+automation/playwright/.cache/
+automation.zip
+
+# Scratch / generated sheet exports (kept as source in docs/sheets, xlsx is a build artifact)
+docs/sheets/*.xlsx
+
+# IA Project Indexer — local index, regenerate anytime with `ia-index`
+.ia-index/
+*.ia-index.json
+AGENTS.md
+

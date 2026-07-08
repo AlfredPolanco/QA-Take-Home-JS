@@ -1,0 +1,31 @@
+{
+  "name": "qa-take-home-automation",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript (POM) automation suite for the-internet.herokuapp.com and saucedemo.com",
+  "private": true,
+  "license": "ISC",
+  "scripts": {
+    "test": "playwright test",
+    "test:ex1": "playwright test --project=the-internet-desktop",
+    "test:ex2": "playwright test --project=saucedemo-desktop --project=saucedemo-mobile",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.9.4",
+    "typescript": "^6.0.3"
+  },
+  "lint-staged": {
+    "*.{ts,js,json,md,html,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}
